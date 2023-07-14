@@ -1,0 +1,1237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.user.UserMapper">
+
+    <insert id="newtheme" parameterType="java.util.HashMap">
+        insert into theme(userid,title,data,text,createtime,replytime,image,tags,type,ycsrc,fenlei,themecookie,lal,position)
+        VALUES(#{userid},#{title},#{data},#{text},#{createtime},#{replytime},#{image},#{tags},#{type},#{ycsrc},#{fenlei},#{themecookie},#{lal},#{position})
+    </insert>
+    <insert id="setactivity" parameterType="java.util.HashMap">
+        insert into activity(themeid,fenlei)
+        VALUES(#{themeid},#{fenlei})
+    </insert>
+    <delete id="deleteactivity" parameterType="java.util.HashMap">
+        delete from activity where themeid = #{themeid}
+    </delete>
+    <select id="gettheme" parameterType="Integer" resultType="java.util.HashMap">
+        select * from theme where themeid = #{themeid}
+    </select>
+
+    <select id="getmessage1" resultType="java.util.HashMap" parameterType="Integer">
+        select * from chat where id = #{id}
+    </select>
+    <select id="getmessage2" resultType="java.util.HashMap" parameterType="String">
+        select * from chat where cookie = #{cookie}
+    </select>
+    <select id="getthemelist" parameterType="Integer" resultType="java.util.HashMap">
+        select * from theme where show1=1  ORDER BY replytime desc limit 0,10
+    </select>
+    <select id="getthemelistby_hot" parameterType="Integer" resultType="java.util.HashMap">
+        select * from theme where show1=1  ORDER BY hot desc limit 0,10
+    </select>
+    <select id="getthemelist1" parameterType="Integer" resultType="java.util.HashMap">
+        select * from theme where jing = 1 and show1=1   ORDER BY  replytime desc limit #{limit},10
+    </select>
+
+    <select id="getactivity" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select * from theme where theme.themeid in(select themeid from activity where fenlei = #{fenlei}) and theme.show1 = 1
+    </select>
+
+    <select id="getactivity1"  resultType="java.util.HashMap">
+        select * from theme where theme.themeid in(select themeid from activity ) and theme.show1 = 1 order by themeid desc limit 3
+    </select>
+
+    <select id="getthemelistby_fenlei" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select * from theme where fenlei = #{fenlei} and show1=1 ORDER BY replytime desc limit #{limit},10
+    </select>
+
+    <select id="getthemelistby_fenlei1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select * from theme where fenlei = #{fenlei} and jing = 1 and show1=1  ORDER BY replytime desc limit #{limit},10
+    </select>
+
+    <select id="jugeactivity" parameterType="Integer" resultType="Integer">
+        select count(*) from activity where themeid = #{themeid}
+    </select>
+
+    <select id="getthemelistby_fenlei2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select * from theme where fenlei = #{fenlei}   and show1=1
+        and userid in(select  b from attention where a = #{userid})
+        ORDER BY replytime desc limit #{limit},10
+    </select>
+
+    <select id="getthemelistby_fenlei0" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select * from theme where  show1=1   ORDER BY replytime desc limit #{limit},10
+    </select>
+
+    <select id="getthemelistby_fenlei11" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select * from theme where jing = 1 and show1=1    ORDER BY replytime desc limit #{limit},10
+    </select>
+
+    <select id="getthemeby_themecookie" parameterType="String" resultType="java.util.HashMap">
+        select * from theme where themecookie = #{themecookie}
+    </select>
+
+    <select id="getthemelistby_fenlei22" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select * from theme where  show1=1
+                              and userid in(select  b from attention where a = #{userid})
+        ORDER BY replytime desc limit #{limit},10
+    </select>
+
+    <select id="getthemelist_jing" parameterType="Integer" resultType="java.util.HashMap">
+        select * from theme where jing = 1 and title != '' and show1=1 ORDER BY replytime desc
+    </select>
+
+    <select id="getthemelist_top" parameterType="Integer" resultType="java.util.HashMap">
+        select * from theme where top = 1 and title != '' and show1=1 ORDER BY replytime desc
+    </select>
+
+    <select id="getadminbyuserid" parameterType="Integer" resultType="Integer">
+        select admin from user where userid = #{userid}
+    </select>
+
+   <delete id="resetlogintime" parameterType="Integer">
+        delete from userlogin where #{times} > times
+    </delete>
+    <update id="deletetheme" parameterType="Integer">
+        update theme
+        <set>
+            show1=0
+        </set>
+        where themeid=#{themeid}
+    </update>
+    <select id="login" parameterType="String" resultType="java.util.HashMap">
+        select * from user where email = #{email}   and password = #{password}
+    </select>
+    <delete id="savedelete" parameterType="java.util.HashMap">
+        delete from save where themeid = #{themeid} and userid = #{userid}
+    </delete>
+    <update id="setcookie" parameterType="java.util.HashMap">
+        update user
+        <set>
+                cookie=#{cookie}
+        </set>
+        where userid=#{userid}
+    </update>
+    <update id="set_app_cookie" parameterType="java.util.HashMap">
+        update user
+        <set>
+            app_cookie=#{cookie}
+        </set>
+        where userid=#{userid}
+    </update>
+    <select id="getuserheadimage" parameterType="Integer" resultType="String">
+        select userheadimage from user where userid = #{userid}
+    </select>
+    <select id="getusername" parameterType="Integer" resultType="String">
+        select username from user where userid = #{userid}
+    </select>
+    <select id="getusername1" parameterType="Integer" resultType="java.util.HashMap">
+        select username,userheadimage from user where userid = #{userid}
+    </select>
+    <select id="getuserbyemail" parameterType="String" resultType="java.util.HashMap">
+        select * from user where email = #{email}
+    </select>
+
+    <insert id="register" parameterType="java.util.HashMap">
+        insert into user(email,password,emailtest,registertime,toutu,userheadimage)
+        VALUES(#{email},#{password},#{emailtest},#{registertime},
+               'https://txtzz-1301452902.file.myqcloud.com/qvqzG8C8QBbvKzyfhScncjAhR.png',
+               'https://txtzz-1301452902.file.myqcloud.com/default.png')
+    </insert>
+    <update id="reregister" parameterType="java.util.HashMap">
+        update user
+        <set>
+            password=#{password}
+        ,
+            emailtest=#{emailtest}
+       ,
+            registertime=#{registertime}
+        </set>
+        where email=#{email}
+    </update>
+    <update id="setpass" parameterType="java.util.HashMap">
+        update user
+        <set>
+            pass=#{pass}
+        </set>
+        where userid=#{userid}
+    </update>
+    <select id="findemailtest" parameterType="String" resultType="java.util.HashMap">
+        select * from user where emailtest = #{emailtest}
+    </select>
+    <select id="getuserbyusername" parameterType="String" resultType="java.util.HashMap">
+        select * from user where username = #{username}
+    </select>
+    <update id="setusernameby_emailtest" parameterType="java.util.HashMap">
+        update user
+        <set>
+            username = #{username},
+            emailtest = null
+        </set>
+        where emailtest = #{emailtest}
+    </update>
+    <update id="setuserbackgroundimage" parameterType="java.util.HashMap">
+        update user
+        <set>
+            userbackgroundimage = #{userbackgroundimage}
+        </set>
+        where userid = #{userid}
+    </update>
+
+    <select id="getmusiclist" resultType="java.util.HashMap">
+        select * from music
+    </select>
+
+    <update id="setuserheadimage" parameterType="java.util.HashMap">
+        update user
+        <set>
+            userheadimage = #{userheadimage}
+        </set>
+        where userid = #{userid}
+    </update>
+
+    <select id="jugeadmin" parameterType="String" resultType="Integer">
+        select admin from user where cookie = #{cookie} or app_cookie = #{cookie}
+    </select>
+
+    <update id="settop" parameterType="Integer">
+        update theme,user
+        <set>
+            theme.top = 1,
+            user.top=user.top+1
+        </set>
+        where theme.themeid = #{themeid} and theme.userid=user.userid
+    </update>
+    <update id="deletetop"  parameterType="Integer">
+        update theme,user
+        <set>
+            theme.top = 0,
+            user.top=user.top-1
+        </set>
+        where themeid = #{themeid} and theme.userid=user.userid
+    </update>
+    <update id="setjing"  parameterType="Integer">
+        update theme,user
+        <set>
+            theme.jing = 1,
+            user.jing = user.jing + 1
+        </set>
+        where theme.themeid = #{themeid} and theme.userid = user.userid
+    </update>
+    <update id="deletejing"  parameterType="Integer">
+        update theme,user
+        <set>
+            theme.jing = 0,
+            user.jing=user.jing-1
+        </set>
+        where theme.themeid = #{themeid} and theme.userid = user.userid
+    </update>
+
+    <select id="getuseridbyemail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select userid from user where email = #{email}
+    </select>
+    <update id="lookadd" parameterType="Integer">
+        update  theme
+        <set>
+            look = look + 1
+        </set>
+        where themeid = #{themeid}
+    </update>
+
+    <select id="getuserbycookie" parameterType="String" resultType="java.util.HashMap">
+        select * from user where cookie = #{cookie} or app_cookie = #{cookie}
+    </select>
+
+    <select id="getfenlei" resultType="java.util.HashMap">
+        select fenlei, COUNT(*) as count FROM  theme where show1=1 GROUP BY fenlei;
+    </select>
+
+    <select id="getfenleilist" resultType="String">
+        select fenlei from fenlei
+    </select>
+    <select id="getfenleilistid" resultType="java.util.HashMap">
+        select fenlei,id from fenlei
+    </select>
+    <select id="getmylike" resultType="Integer" parameterType="Integer">
+        select themeid from likes where userid = #{userid}
+    </select>
+
+    <insert id="setmylike" parameterType="Integer">
+        insert into likes(userid,themeid)
+        VALUES(#{userid},#{themeid})
+    </insert>
+    <insert id="addtag" parameterType="java.util.HashMap">
+        insert into tags(themecookie,tag)
+        VALUES(#{themecookie},#{tag})
+    </insert>
+    <insert id="newidentity" parameterType="java.util.HashMap">
+        insert into identity(fenleiid,identity )
+        values (#{fenleiid},#{identity})
+    </insert>
+    <insert id="newinterest" parameterType="java.util.HashMap">
+        insert into interest(fenleiid,interest )
+        values (#{fenleiid},#{interest})
+    </insert>
+    <delete id="deletemylike" parameterType="Integer">
+        delete from likes where themeid = #{themeid} and userid = #{userid}
+    </delete>
+
+    <update id="likeadd" parameterType="Integer">
+        update  theme
+        <set>
+            likes = likes + 1
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <update id="setthemereplytime" parameterType="java.util.HashMap">
+        update  theme
+        <set>
+            replytime = #{time}
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <update id="likecut" parameterType="Integer">
+        update  theme
+        <set>
+            likes = likes - 1
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <select id="getmyself" resultType="java.util.HashMap" parameterType="String">
+        select birthday,ban,toutu,fans,attention,email,userid,username,userheadimage,userbackgroundimage,sign,save,bylike,registertime,admin,ban_time,banreason
+        from user where cookie = #{cookie} or app_cookie = #{cookie}
+    </select>
+
+    <select id="getheself" resultType="java.util.HashMap" parameterType="Integer">
+        select toutu,fans,attention,userid,username,userheadimage,userbackgroundimage,sign,save,bylike,registertime,admin
+        from user where userid = #{userid}
+    </select>
+
+    <select id="getthemelistby_user" parameterType="Integer" resultType="java.util.HashMap">
+        select * from theme where userid = #{userid} and show1=1 order by createtime desc limit #{limit},10
+    </select>
+
+    <select id="getpianyi" parameterType="String" resultType="java.util.HashMap">
+        select `pianyi`,`pianyi1`,`left`,`top`,`left1`,`top1` from headborder where url = #{url}
+    </select>
+
+    <update id="setsign" parameterType="String">
+        update user
+        <set>
+            sign = #{sign}
+        </set>
+        where cookie = #{cookie} or app_cookie = #{cookie}
+    </update>
+    <select id="getheadborderlist" resultType="java.util.HashMap">
+        select * from headborder
+    </select>
+
+    <select id="getmysave" resultType="Integer" parameterType="Integer">
+        select themeid from save where userid = #{userid}
+    </select>
+    <update id="setusertoutu" parameterType="java.util.HashMap">
+        update user
+        <set>
+            toutu = #{toutu}
+        </set>
+        where userid = #{userid}
+    </update>
+
+    <select id="getsign" resultType="String" parameterType="Integer">
+        select sign from user where userid = #{userid}
+    </select>
+
+    <select id="getlouceng" resultType="Integer" parameterType="Integer">
+        select louceng from theme where themeid = #{themeid}
+    </select>
+
+    <update id="numadd" parameterType="Integer">
+        update theme
+        <set>
+            num = num+1
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <update id="loucengadd" parameterType="Integer">
+        update theme
+        <set>
+            louceng = louceng+1
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <update id="updateheadborder" parameterType="java.util.HashMap">
+        update headborder
+        <set>
+            `pianyi`=#{pianyi},
+            `pianyi1`=#{pianyi1},
+            `left`=#{left},
+            `left1`=#{left1},
+            `top`=#{top},
+            `top1`=#{top1}
+        </set>
+        where id = #{id}
+    </update>
+    <insert id="saveadd" parameterType="java.util.HashMap">
+        insert into save(userid,themeid)
+        VALUES(#{userid},#{themeid})
+    </insert>
+    <insert id="newfenlei" parameterType="java.util.HashMap">
+        insert into fenlei(fenlei)
+        VALUES(#{fenlei})
+    </insert>
+    <insert id="newreply" parameterType="java.util.HashMap">
+        insert into reply(themeid,userid,data,image,louceng,time,type)
+        VALUES(#{themeid},#{userid},#{data},#{image},#{louceng},#{time},1)
+    </insert>
+    <insert id="newheadborder" parameterType="java.util.HashMap">
+        insert into headborder(url)
+        VALUES(#{url})
+    </insert>
+
+    <insert id="newreply_in" parameterType="java.util.HashMap">
+        insert into reply(themeid,userid,data_in,louceng_in,time,type)
+        VALUES(#{themeid},#{userid},#{data},#{louceng},#{time},0)
+    </insert>
+
+    <select id="getreply" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select user.userid,user.userheadimage,user.username,user.admin,user.sign,reply.id,
+               reply.data,reply.louceng,reply.time,reply.image
+        from user,reply
+        where user.userid=reply.userid and reply.themeid=#{themeid} and reply.id > #{id} and reply.show1=1
+        order by id limit 10
+    </select>
+    <select id="getreply1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select user.userid,user.userheadimage,user.username,user.admin,user.sign,reply.id,
+               reply.data,reply.louceng,reply.time,reply.image
+        from user,reply
+        where user.userid=reply.userid and reply.themeid=#{themeid} and reply.id >= #{id} and reply.show1=1
+        order by id limit 10
+    </select>
+    <select id="getreply_author" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select user.userid,user.userheadimage,user.username,user.admin,user.sign,reply.id,
+               reply.data,reply.louceng,reply.time,reply.image
+        from user,reply,theme
+        where user.userid=reply.userid and reply.themeid=#{themeid} and reply.id > #{id} and reply.show1=1
+        and reply.userid = theme.userid and theme.themeid = reply.themeid
+        order by id limit 10
+    </select>
+    <select id="getcookie" parameterType="Integer" resultType="String">
+        select cookie from user where userid =#{userid}
+    </select>
+    <select id="getadmin" parameterType="String" resultType="Integer">
+        select admin from user where cookie =#{cookie} or app_cookie = #{cookie}
+    </select>
+    <select id="getuseridbylouceng" resultType="Integer" parameterType="Integer">
+        select userid from reply where louceng=#{louceng} and themeid=#{themeid}
+    </select>
+
+    <update id="deletelouceng" parameterType="Integer">
+        update reply
+        <set>
+            show1 = 0
+        </set>
+        where themeid = #{themeid} and louceng = #{louceng}
+    </update>
+    <update id="setfenleimoren" parameterType="java.util.HashMap">
+        update theme
+        <set>
+            fenlei = '默认分类'
+        </set>
+        where fenlei = #{fenlei}
+    </update>
+    <select id="getmyattention" parameterType="Integer" resultType="Integer">
+        select b from attention where a = #{userid} order by b desc
+    </select>
+    <select id="getthemelistnum" parameterType="Integer" resultType="Integer">
+        select count(*) from theme where userid = #{userid}
+    </select>
+    <insert id="addattention" parameterType="Integer">
+        insert into attention(a,b)
+        VALUES(#{a},#{b})
+    </insert>
+
+    <delete id="deleteattention" parameterType="Integer">
+        delete from attention where a = #{a} and b = #{b}
+    </delete>
+    <delete id="deletefenlei" parameterType="java.util.HashMap">
+        delete from fenlei where id = #{id} and fenlei = #{fenlei}
+    </delete>
+    <select id="getmyattentionlist" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select user.userid,user.username,user.userheadimage,user.admin,user.sign from user,attention where user.userid=attention.b and attention.a=#{a} order by attention.id desc limit #{page},15
+    </select>
+    <select id="getmyfanslist" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select user.userid,user.username,user.userheadimage,user.admin,user.sign from user,attention where user.userid=attention.a and attention.b=#{b} order by attention.id desc limit #{page},15
+    </select>
+
+    <update id="addfansnum" parameterType="Integer">
+        update user
+        <set>
+            fans=fans+1
+        </set>
+        where userid=#{b}
+    </update>
+
+    <update id="addattentionnum" parameterType="Integer">
+        update user
+        <set>
+            attention=attention+1
+        </set>
+        where userid=#{a}
+    </update>
+    <update id="deletefansnum" parameterType="Integer">
+        update user
+        <set>
+            fans=fans-1
+        </set>
+        where userid=#{b}
+    </update>
+
+    <update id="deleteattentionnum" parameterType="Integer">
+        update user
+        <set>
+            attention=attention-1
+        </set>
+        where userid=#{a}
+    </update>
+    <update id="userlikeadd" parameterType="Integer">
+        update user,theme
+        <set>
+            user.bylike=user.bylike+1
+        </set>
+        where user.userid=theme.userid and theme.themeid=#{themeid}
+    </update>
+    <update id="userlikecut" parameterType="Integer">
+        update user,theme
+        <set>
+            user.bylike=user.bylike-1
+        </set>
+        where user.userid=theme.userid and theme.themeid=#{themeid}
+    </update>
+    <update id="updatehot" parameterType="Integer">
+        update theme
+        <set>
+            hot = POW((likes+1)/(#{time}-createtime),1.8)
+        </set>
+        where show1=1
+    </update>
+
+    <select id="hotthemelist" resultType="java.util.HashMap">
+        select themeid,hot from theme
+    </select>
+    <update id="user_visit" parameterType="Integer">
+        update user
+        <set>
+            lastlogintime = #{time}
+        </set>
+        where userid = #{userid}
+    </update>
+    <update id="userhot" parameterType="Integer">
+        update user
+        <set>
+            hot = POW((bylike+fans+top*100+jing*100)/(#{time}-lastlogintime),1.8)
+        </set>
+        where username is not null
+    </update>
+
+    <select id="userhotlist" resultType="java.util.HashMap">
+        select userid,username,userheadimage,admin from user where username is not null order by hot desc limit 0,10
+    </select>
+
+    <select id="getmysavelist" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from theme where themeid in (select themeid from save where userid = #{userid} and show1 = 1 order by id desc) order by themeid desc limit #{page},5
+    </select>
+
+    <select id="getmylikelist" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from theme where themeid in (select themeid from likes where userid = #{userid} and show1 = 1  order by id desc) order by themeid desc limit #{page},5
+    </select>
+
+    <select id="hottag" resultType="String">
+        select tags.tag from tags,theme where tags.themecookie in (select themecookie from theme where show1 = 1) group by tag order by count(*) desc limit 0,12
+    </select>
+    <select id="getthemelistby_tag" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from theme where tags like CONCAT(CONCAT('%',#{tagname,jdbcType=VARCHAR}),'%') and show1 = 1 order by hot desc limit #{page},5
+    </select>
+
+    <select id="getthemelistby_tag1" resultType="java.util.HashMap" parameterType="String">
+        select * from theme where tags like CONCAT(CONCAT('%',#{tag,jdbcType=VARCHAR}),'%') and show1 = 1 order by hot desc
+    </select>
+
+    <select id="searchuser" resultType="java.util.HashMap" parameterType="String">
+        select username,userid,userheadimage,admin from user where username like  CONCAT(CONCAT('%',#{key,jdbcType=VARCHAR}),'%') or userid like CONCAT(CONCAT(#{key,jdbcType=VARCHAR}))
+    </select>
+
+    <select id="searchtheme" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from theme where show1 = 1 and ( (data like CONCAT(CONCAT('%',#{key,jdbcType=VARCHAR}),'%') or title like CONCAT(CONCAT('%',#{key,jdbcType=VARCHAR}),'%')
+        or userid in (select userid from user where username like  CONCAT(CONCAT('%',#{key,jdbcType=VARCHAR}),'%') ))
+        or themecookie in (select themecookie from tags where tag like CONCAT(CONCAT('%',#{key,jdbcType=VARCHAR}),'%') ) )
+        order by themeid desc limit #{limit},10
+    </select>
+
+    <select id="getusermessage" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select userid,username,userheadimage,registertime,lastlogintime,sign,themenum,admin,ban,email,ban_time,ban_sub,banreason
+        from user where CAST(userid AS CHAR)
+        LIKE  CONCAT(CONCAT('%',#{userid,jdbcType=VARCHAR}),'%')
+        and username like  CONCAT(CONCAT('%',#{username,jdbcType=VARCHAR}),'%')
+        and email like  CONCAT(CONCAT('%',#{email,jdbcType=VARCHAR}),'%')
+    </select>
+
+    <select id="getuserheadborder1" parameterType="Integer" resultType="java.util.HashMap">
+        select * from headborder where id in (select headborderid from userheadborder where userid = #{userid})
+    </select>
+    <select id="getuserheadborder2" parameterType="Integer" resultType="java.util.HashMap">
+        select * from headborder where id not in (select headborderid from userheadborder where userid = #{userid})
+    </select>
+
+    <update id="themenumadd" parameterType="Integer">
+        update user
+        <set>
+            themenum=themenum+1
+        </set>
+        where userid = #{userid}
+    </update>
+    <update id="themenumcut" parameterType="Integer">
+        update user
+        <set>
+            themenum=themenum-1
+        </set>
+        where userid in (select userid from theme where themeid = #{themeid})
+    </update>
+    <update id="changepassword" parameterType="java.util.HashMap">
+        update user
+        <set>
+            password = #{password},
+            cookie = '',
+            app_cookie = ''
+        </set>
+        where userid = #{userid} and (app_cookie = #{cookie} or cookie = #{cookie})and password = #{oldpassword}
+    </update>
+    <update id="changepassword1" parameterType="java.util.HashMap">
+        update user
+        <set>
+            password = #{password},
+            cookie = '',
+            app_cookie = '',
+        </set>
+        where userid = #{userid}
+    </update>
+    <select id="searchpassword" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select * from user where password = #{oldpassword} and (app_cookie = #{cookie} or cookie = #{cookie})
+    </select>
+    <update id="changemessage" parameterType="java.util.HashMap">
+        update user
+        <set>
+            username = #{username},
+            userheadimage = #{userheadimage},
+            email = #{email},
+            sign = #{sign},
+            admin = #{admin},
+            ban = #{ban},
+            banreason = #{banreason},
+            ban_time = #{bantime},
+            ban_sub = #{bansub}
+        </set>
+        where userid = #{userid}
+    </update>
+    <update id="jugebanout" parameterType="Integer">
+        update user
+        <set>
+            ban = 0,
+            ban_sub = -1,
+            banreason = '',
+            ban_time = 0 ,
+        </set>
+        where userid = #{userid} and ban = 1 and #{now} > ban_time
+    </update>
+    <update id="ban" parameterType="java.util.HashMap">
+        update user
+        <set>
+            ban = #{ban},
+            banreason = '',
+            ban_time = 0,
+            ban_sub = -1
+        </set>
+        where userid = #{userid}
+    </update>
+    <select id="getfenleis" resultType="java.util.HashMap">
+        select * from fenlei
+    </select>
+
+    <select id="searchtheme_admin" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select theme.*,user.username from theme,user
+        where CAST(themeid AS CHAR) like  CONCAT(CONCAT('%',#{themeid,jdbcType=VARCHAR}),'%')
+        and theme.userid in (select userid from user where username like CONCAT(CONCAT('%',#{username,jdbcType=VARCHAR}),'%'))
+        and  theme.createtime > #{startime} and  #{endtime} >  theme.createtime
+        and  theme.num >= #{minreply} and #{maxreply} >=  theme.num
+        and CAST( theme.jing AS CHAR) like  CONCAT(CONCAT('%',#{jing,jdbcType=VARCHAR}),'%')
+        and CAST( theme.top AS CHAR) like  CONCAT(CONCAT('%',#{top,jdbcType=VARCHAR}),'%')
+        and  theme.look >= #{minlook} and #{maxlook} >=  theme.look
+        and  theme.fenlei like CONCAT(CONCAT('%',#{fenlei,jdbcType=VARCHAR}),'%')
+        and  theme.data like CONCAT(CONCAT('%',#{data,jdbcType=VARCHAR}),'%')
+        and user.userid = theme.userid
+        order by themeid desc limit #{limit},10
+    </select>
+    <select id="searchtheme_admin_num" parameterType="java.util.HashMap" resultType="Integer">
+        select count(*) from theme
+        where CAST(themeid AS CHAR) like  CONCAT(CONCAT('%',#{themeid,jdbcType=VARCHAR}),'%')
+          and userid in (select userid from user where username like CONCAT(CONCAT('%',#{username,jdbcType=VARCHAR}),'%'))
+          and createtime >= #{startime} and  #{endtime} >= createtime
+          and num >= #{minreply} and #{maxreply} >= num
+          and CAST(jing AS CHAR) like  CONCAT(CONCAT('%',#{jing,jdbcType=VARCHAR}),'%')
+          and CAST(top AS CHAR) like  CONCAT(CONCAT('%',#{top,jdbcType=VARCHAR}),'%')
+          and look >= #{minlook} and #{maxlook} >= look
+          and fenlei like CONCAT(CONCAT('%',#{fenlei,jdbcType=VARCHAR}),'%')
+          and data like CONCAT(CONCAT('%',#{data,jdbcType=VARCHAR}),'%')
+        order by themeid desc
+    </select>
+    <update id="deletetheme_admin" parameterType="java.util.HashMap">
+        update theme
+        <set>
+            show1 = 0
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <update id="setfindpassword" parameterType="java.util.HashMap">
+        update user
+        <set>
+            findpassword = #{findpassword}
+        </set>
+        where email = #{email}
+    </update>
+    <update id="huifutheme_admin" parameterType="java.util.HashMap">
+        update theme
+        <set>
+            show1 = 1
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <update id="deletetop_admin" parameterType="java.util.HashMap">
+        update theme
+        <set>
+            top = 0
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <update id="settop_admin" parameterType="java.util.HashMap">
+        update theme
+        <set>
+            top = 1
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <update id="deletejing_admin" parameterType="java.util.HashMap">
+        update theme
+        <set>
+            jing = 0
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <update id="setjing_admin" parameterType="java.util.HashMap">
+        update theme
+        <set>
+            jing = 1
+        </set>
+        where themeid = #{themeid}
+    </update>
+    <select id="getmessage" resultType="java.util.HashMap">
+        select * from message
+    </select>
+
+    <select id="getreply_admin" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select reply.*,user.username,theme.title from reply,user,theme
+        where user.userid = reply.userid and theme.themeid = reply.themeid
+        and reply.data  like CONCAT(CONCAT('%',#{data,jdbcType=VARCHAR}),'%')
+        and user.username  like CONCAT(CONCAT('%',#{username,jdbcType=VARCHAR}),'%')
+        and #{endtime} >= reply.time and reply.time >= #{startime}
+        order by reply.id desc
+        limit #{limit},10
+    </select>
+    <select id="getreplylouceng_admin" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select louceng_reply.*,user.username,theme.title from louceng_reply,user,theme
+        where user.userid = louceng_reply.userid and theme.themeid = louceng_reply.themeid
+          and louceng_reply.data  like CONCAT(CONCAT('%',#{data,jdbcType=VARCHAR}),'%')
+          and user.username  like CONCAT(CONCAT('%',#{username,jdbcType=VARCHAR}),'%')
+          and #{endtime} >= louceng_reply.time and louceng_reply.time >= #{startime}
+        order by louceng_reply.id desc
+            limit #{limit},10
+    </select>
+    <select id="getreplylouceng_admin_num" parameterType="java.util.HashMap" resultType="Integer">
+        select count(*) from louceng_reply,user
+        where user.userid = louceng_reply.userid
+          and louceng_reply.data  like CONCAT(CONCAT('%',#{data,jdbcType=VARCHAR}),'%')
+          and user.username  like CONCAT(CONCAT('%',#{username,jdbcType=VARCHAR}),'%')
+          and #{endtime} >= louceng_reply.time and louceng_reply.time >= #{startime}
+    </select>
+    <select id="getreply_admin_num" parameterType="java.util.HashMap" resultType="Integer">
+        select count(*) from reply,user
+        where user.userid = reply.userid
+          and reply.data  like CONCAT(CONCAT('%',#{data,jdbcType=VARCHAR}),'%')
+          and user.username  like CONCAT(CONCAT('%',#{username,jdbcType=VARCHAR}),'%')
+          and #{endtime} >= reply.time and reply.time >= #{startime}
+    </select>
+    <update id="deletereply_admin" parameterType="java.util.HashMap">
+        update reply
+        <set>
+            show1 = 0
+        </set>
+        where id = #{id}
+    </update>
+    <update id="huifureply_admin" parameterType="java.util.HashMap">
+        update reply
+        <set>
+            show1 = 1
+        </set>
+        where id = #{id}
+    </update>
+    <update id="deletloucengereply_admin" parameterType="java.util.HashMap">
+        update louceng_reply
+        <set>
+            show1 = 0
+        </set>
+        where id = #{id}
+    </update>
+    <update id="huifuloucengreply_admin" parameterType="java.util.HashMap">
+        update louceng_reply
+        <set>
+            show1 = 1
+        </set>
+        where id = #{id}
+    </update>
+    <update id="changepassword_byemail" parameterType="java.util.HashMap">
+        update user
+        <set>
+            password = #{password},
+            cookie = '',
+            app_cookie = '',
+            findpassword = ''
+        </set>
+        where email = #{email} and findpassword = #{findpassword}
+    </update>
+    <select id="gettodayregister" resultType="Integer" parameterType="Integer">
+        select count(*) from user where  registertime >= #{time} and #{time}+24*60*60 >=registertime
+    </select>
+    <select id="gettodayhotuser" resultType="Integer" parameterType="String">
+        select count(*) from userlogin where  #{time} = time
+    </select>
+    <select id="gettodaynewtheme" resultType="Integer" parameterType="Integer">
+        select count(*) from theme where  createtime >= #{time} and #{time}+24*60*60 >= createtime
+    </select>
+    <select id="gettodaynewreply" resultType="Integer" parameterType="Integer">
+        select count(*) from reply where  reply.time >= #{time} and #{time}+24*60*60 >= reply.time
+    </select>
+    <select id="gettotleusernum" resultType="Integer" >
+        select count(*) from user
+    </select>
+    <select id="gettotlethemenum" resultType="Integer" >
+        select count(*) from theme
+    </select>
+    <select id="gettotlereplynum" resultType="Integer" >
+        select count(*) from reply
+    </select>
+    <select id="getjingnum" resultType="Integer" >
+        select count(*) from theme where  jing = 1
+    </select>
+    <insert id="user_visit1" parameterType="java.util.HashMap">
+        insert ignore into userlogin(time,userid,times)
+        value (#{time},#{userid},#{times})
+    </insert>
+
+    <insert id="adduserheadborder" parameterType="java.util.HashMap">
+        insert into userheadborder (userid,headborderid)
+        value (#{userid},#{headborderid})
+    </insert>
+    <select id="juge_user_visit" parameterType="java.util.HashMap" resultType="Integer">
+        select count(*) from userlogin where userid = #{userid} and time = #{time}
+    </select>
+    <select id="getfenleichart" resultType="java.util.HashMap">
+        select fenlei as name ,count(fenlei) as value from theme group by fenlei
+    </select>
+    <select id="getheadborderid" parameterType="Integer" resultType="Integer">
+        select headborder from user where userid = #{userid}
+    </select>
+    <select id="gethotagschart" resultType="java.util.HashMap">
+        select tag as name from tags where themecookie in (select themecookie from theme where show1 = 1) group by tag limit 0,20
+    </select>
+
+    <select id="jugeuserban" resultType="Integer" parameterType="java.util.HashMap">
+        select ban from user where userid = #{userid} and cookie = #{cookie} or app_cookie = #{cookie}
+    </select>
+
+    <update id="setuserheadborder" parameterType="java.util.HashMap">
+        update user
+        <set>
+            headborder = #{headborderid}
+        </set>
+        where userid = #{userid}
+    </update>
+
+    <select id="getreplymessage" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        (
+        SELECT
+        reply.themeid,
+        reply.data,
+        reply.time,
+        reply.louceng,
+        reply.image,
+        reply.type,
+        reply.id as id,
+        user.userid,
+        user.username,
+        user.userheadimage,
+        theme.data as themedata,
+        theme.image as themeimage,
+        theme.title as title
+        from reply,user,theme
+        where reply.userid = user.userid
+        and reply.show1 = 1
+        and reply.userid != #{userid}
+        and reply.themeid=theme.themeid
+        and theme.userid = #{userid}
+        and theme.show1 = 1
+        )
+        union
+        (
+        SELECT
+        louceng_reply.themeid,
+        louceng_reply.data,
+        louceng_reply.time,
+        louceng_reply.louceng,
+        louceng_reply.image,
+        louceng_reply.type,
+        reply.id,
+        user.userid,
+        user.username,
+        user.userheadimage,
+        reply.data as themedata,
+        reply.image as themeimage,
+        '' as title
+        from louceng_reply,reply,user
+        where louceng_reply.userid = user.userid
+        and louceng_reply.show1 = 1
+        and louceng_reply.userid != #{userid}
+        and louceng_reply.themeid = reply.themeid
+        and louceng_reply.louceng = reply.louceng
+        and reply.userid = #{userid}
+        and louceng_reply.atid not in (  select l2.id
+            from louceng_reply as l1,louceng_reply as l2,reply,user
+            where l1.userid = user.userid
+          and l1.show1 = 1
+          and l2.userid =  #{userid}
+          and l2.id = l1.atid)
+        )
+        union
+        (
+            SELECT
+                l1.themeid,
+                l1.data,
+                l1.time,
+                l1.louceng,
+                l1.image,
+                l1.type,
+                l1.id,
+                user.userid,
+                user.username,
+                user.userheadimage,
+                l2.data as themedata,
+                '' as themeimage,
+                '' as title
+            from louceng_reply as l1,louceng_reply as l2,reply,user
+            where l1.userid = user.userid
+              and l1.show1 = 1
+              and l2.userid = #{userid}
+              and l2.id = l1.atid
+        )
+        ORDER BY time desc limit #{limit},10
+</select>
+    <select id="getreplymessagenum" resultType="Integer" parameterType="java.util.HashMap">
+        select count(*)
+        from user,reply,theme
+        where reply.themeid in (select themeid from theme where userid = #{userid})
+          and reply.themeid = theme.themeid
+          and user.userid = reply.userid
+          and theme.userid = #{userid}
+          and reply.id > #{id}
+          and reply.userid != #{userid}
+          and reply.show1 = 1
+          and reply.userid != #{userid}
+        order by id desc
+    </select>
+    <select id="finduserby_findpassword" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from user where findpassword = #{findpassword}
+    </select>
+    <select id="getall_systemmessage" resultType="java.util.HashMap">
+        select * from systemmessage where userid = 0 order by id desc
+    </select>
+    <select id="getmy_systemmessage" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from systemmessage where userid = 0 or userid in(select userid from user where cookie = #{cookie} or app_cookie = #{cookie}) and show1 = 1
+        order by id desc limit #{page},5
+    </select>
+    <select id="getuserinfo" resultType="java.util.HashMap" parameterType="Integer">
+        select * from user where userid = #{userid}
+    </select>
+
+    <select id="getheadborder" resultType="java.util.HashMap" parameterType="Integer">
+        select headborder.url,headborder.pianyi from headborder,user where user.headborder=headborder.id and user.userid = #{userid}
+    </select>
+    <update id="deletesystemmessage" parameterType="java.util.HashMap">
+        update systemmessage
+        <set>
+            show1 = 0
+        </set>
+        where id = #{id}
+    </update>
+    <update id="replysystemmessage" parameterType="java.util.HashMap">
+        update systemmessage
+        <set>
+            show1 = 1
+        </set>
+        where id = #{id}
+    </update>
+    <insert id="newsystemmessage" parameterType="java.util.HashMap">
+        insert into systemmessage (userid,systemheadimage,message,src,createtime,show1,images)
+        value (#{userid},#{systemheadimage},#{message},#{src},#{createtime},#{show1},#{images})
+    </insert>
+    <insert id="newchat" parameterType="java.util.Map">
+        insert into chat (a,b,message,image,time,cookie)
+        value(#{a},#{b},#{message},#{image},#{time},#{cookie})
+    </insert>
+    <delete id="backmessage" parameterType="Integer">
+        delete from chat where id = #{id}
+    </delete>
+    <delete id="deleteuserheadborder" parameterType="java.util.HashMap">
+        delete from userheadborder where userid = #{userid} and headborderid = #{headborderid}
+    </delete>
+    <delete id="deletetags" parameterType="String">
+        delete from tags where themecookie = #{themecookie}
+    </delete>
+    <select id="getmychat" parameterType="Integer" resultType="java.util.HashMap">
+        select time,message,image from chat where time >0 and  (#{a} = chat.a and #{b} = chat.b ) or( #{b} = chat.a and #{a}= chat.b ) order by id desc limit 0,1
+    </select>
+
+    <select id="getmychatlist" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select a,b,message,image,id,time from chat where (a = #{userid} or b= #{userid}) and id > #{id}
+    </select>
+
+    <select id="getchatinfo" resultType="java.util.HashMap" parameterType="Integer">
+        select username,userid,userheadimage from user where userid = #{userid}
+    </select>
+    <select id="getloucengreply" parameterType="Integer" resultType="java.util.HashMap">
+        select id,themeid,louceng,user.userid,user.username,user.userheadimage,data,time,user.sign,atuserid,atusername,atid
+        from user,louceng_reply
+        where themeid = #{themeid} and louceng = #{louceng} and user.userid = louceng_reply.userid and louceng_reply.show1 = 1
+    </select>
+    <select id="getidentity" resultType="java.util.HashMap" parameterType="Integer">
+        select id,identity from identity where fenleiid = #{id}
+    </select>
+    <select id="getinterest" resultType="java.util.HashMap" parameterType="Integer">
+        select id,interest from interest where fenleiid = #{id}
+    </select>
+    <delete id="deleteidentity" parameterType="Integer">
+        delete from identity where #{id} = id
+    </delete>
+    <delete id="deleteinterest" parameterType="Integer">
+        delete from interest where #{id} = id
+    </delete>
+    <select id="getidentitylist" resultType="java.util.HashMap">
+        select id,identity from identity
+    </select>
+    <select id="getinterestlist" resultType="java.util.HashMap">
+        select id,interest from interest
+    </select>
+    <delete id="deletemyshenfen" parameterType="Integer">
+        delete from shenfen where #{userid} = userid
+    </delete>
+    <insert id="setmyshenfen" parameterType="java.util.HashMap">
+        insert into shenfen (userid,shenfenid,type)
+        value (#{userid},#{id},#{type})
+    </insert>
+
+    <insert id="newloucengreply" parameterType="java.util.HashMap">
+        insert into louceng_reply(userid,themeid,data,time,louceng,cookie,atid,atuserid,atusername)
+        value (#{userid},#{themeid},#{data},#{time},#{louceng},#{cookie},#{atid},#{atuserid},#{atusername})
+    </insert>
+    <select id="getmyshenfen" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select shenfenid as id ,userid,type from shenfen where userid = #{userid}
+    </select>
+
+    <select id="getmyshenfen1" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select identity as name,id from identity where id = #{id}
+    </select>
+    <select id="getmyshenfen2" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select interest as name,id from interest where id = #{id}
+    </select>
+    <select id="getreplylouceng_id" resultType="Integer" parameterType="String">
+        select id from louceng_reply where cookie = #{cookie}
+    </select>
+    <select id="tuijianuser" parameterType="Integer" resultType="Integer">
+        select fenleiid from identity where
+                id in (select shenfenid as fenleiid from shenfen where userid = #{userid} and type = 1)
+        group by fenleiid
+        union all
+        select fenleiid from interest where
+                id in (select shenfenid as fenleiid from shenfen where userid = #{userid} and type = 2)
+        group by fenleiid
+    </select>
+
+    <select id="tuijianuser1" parameterType="java.util.List" resultType="java.util.HashMap">
+        select userid,username,userheadimage from user where userid in(
+        select userid from shenfen where shenfenid in(
+        select id from identity where fenleiid in
+        <foreach collection="list" item="fenleiid" index="index" open="(" close=")" separator=",">#{fenleiid}
+        </foreach>
+        )
+        and
+        type = 1
+        union all
+        select userid from shenfen where shenfenid in(
+        select id from interest where fenleiid in
+        <foreach collection="list" item="fenleiid" index="index" open="(" close=")" separator=",">
+            #{fenleiid}
+        </foreach>
+        ) and type = 2
+        GROUP BY userid
+        ) order by hot
+    </select>
+    <select id="tuijianuser2" parameterType="java.util.List" resultType="java.util.HashMap">
+        select userid,username,userheadimage from user where username != '' and  userid not in(
+        select userid from shenfen where shenfenid in(
+        select id from identity where fenleiid in
+        <foreach collection="list" item="fenleiid" index="index" open="(" close=")" separator=",">#{fenleiid}
+        </foreach>
+        )
+        and
+        type = 1
+        union all
+        select userid from shenfen where shenfenid in(
+        select id from interest where fenleiid in
+        <foreach collection="list" item="fenleiid" index="index" open="(" close=")" separator=",">
+            #{fenleiid}
+        </foreach>
+        ) and type = 2
+        GROUP BY userid
+        ) order by hot  desc limit 0,5
+    </select>
+    <update id="changetheme" parameterType="java.util.HashMap">
+        update theme
+        <set>
+            title = #{title},
+            text = #{text},
+            data = #{data},
+            image = #{image},
+            tags = #{tags},
+            type = #{type},
+            ycsrc = #{ycsrc},
+            fenlei = #{fenlei},
+            changetime = #{changetime}
+        </set>
+        where themecookie = #{themecookie}
+    </update>
+    <update id="setbirthday" parameterType="java.util.HashMap">
+        update user
+        <set>
+            birthday = #{birthday}
+        </set>
+        where cookie = #{cookie} or app_cookie = #{cookie}
+    </update>
+    <update id="deleteloucengreply" parameterType="java.util.HashMap">
+        update louceng_reply
+        <set>
+            show1 = 0
+        </set>
+        where id = #{id}
+    </update>
+    <select id="getmyshenfenid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select shenfenid as id,type from shenfen where userid = #{userid}
+    </select>
+
+    <select id="getmypattention" parameterType="java.util.HashMap" resultType="Integer">
+        select b from s_attention where a = #{userid}
+    </select>
+
+    <select id="getmypattention1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select userid,username from user
+    </select>
+
+    <select id="getattentionidlist" resultType="Integer" parameterType="java.util.HashMap">
+        select b from attention where a = #{userid}
+
+    </select>
+
+    <select id="gettuijian_cd" parameterType="java.util.HashMap" resultType="Integer">
+        select tuijian_cd from user where userid = #{userid}
+    </select>
+
+    <update id="settuijian_cd" parameterType="Integer">
+        update user
+        <set>
+            tuijian_cd = #{time}
+        </set>
+        where userid = #{userid}
+    </update>
+
+    <select id="getlastpattention" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select userid,username,userheadimage from user where userid in (select tuijian_userid as userid from user where userid = #{userid})
+    </select>
+
+    <update id="setlastpattention" parameterType="Integer">
+        update user
+        <set>
+            tuijian_userid = #{userid2}
+        </set>
+        where userid = #{userid1}
+    </update>
+
+    <select id="getpixivdate" resultType="String">
+        select date from pixiv order by id  desc limit 0,1
+    </select>
+
+    <insert id="newpixiv" parameterType="java.util.Map">
+        insert   into pixiv(pid,title,username,tags,width,height,date,time,uid,url)
+        VALUES(#{id},#{title},#{user_name},#{tags},#{width},#{height},#{date},#{uploaded_at},#{user_id},#{url})
+        ON duplicate KEY UPDATE pid = #{id}
+    </insert>
+
+    <select id="getpixiv_pc" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select * from pixiv where width > height * 1.15  and tags not like '%漫画%'
+    </select>
+    <select id="getpixiv_pe" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select * from pixiv where height > width * 1.3  and tags not like '%漫画%' order by rand() limit 1
+    </select>
+
+    <select id="getpixiv" resultType="java.util.HashMap" parameterType="String">
+        select title,username,pid,url from pixiv where date = #{date}
+    </select>
+
+    <insert id="newpixivtheme" parameterType="java.util.HashMap">
+        insert into theme(userid,title,data,text,createtime,replytime,image,tags,type,ycsrc,fenlei,themecookie)
+        VALUES(#{userid},#{title},#{data},#{text},#{createtime},#{replytime},#{image},#{tags},#{type},#{ycsrc},#{fenlei},#{themecookie})
+    </insert>
+
+    <select id="getpixivcount" parameterType="String" resultType="Integer">
+        SELECT count(*) from theme where title = #{str}
+    </select>
+
+    <select id="test1" resultType="java.util.HashMap">
+        select * from theme
+    </select>
+
+    <select id="getskinlist" resultType="java.util.HashMap">
+        select * from skin
+    </select>
+
+    <select id="gethottagnum" parameterType="java.util.HashMap" resultType="Integer">
+        select count(*) from theme where tags like CONCAT(CONCAT('%',#{tagname,jdbcType=VARCHAR}),'%') and show1 = 1
+    </select>
+
+    <select id="gettable1" resultType="String">
+        select table1 from `table`
+    </select>
+
+    <select id="gettable2" resultType="String">
+        select table2 from `table`
+    </select>
+
+    <select id="getupdatenotes" resultType="java.util.HashMap">
+        select * from notes order by id desc limit 0,3
+    </select>
+</mapper>

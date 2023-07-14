@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="index.css" />
+        <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <style>
+            input{
+                height:50px;
+                width:150px;
+            }
+            .active{
+                height:200px;
+                width:200px;
+                background-color: cornflowerblue;
+                opacity: 0.8;
+                border-radius: 10px;
+                color:wheat;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .active1{
+                height:300px;
+                width:300px;
+                border:0.5px solid grey;
+            }
+            .div1{
+                width:500px;
+                height:auto;
+                border:1px solid grey;
+                margin-top:20px;
+            }
+            .text{
+                width:80%;
+                font-size: 20px;
+                padding-left: 10px;
+                color:grey;
+            }
+            ul{
+                width:100%;
+                color:grey;
+                padding-left: 10px;
+                list-style: none;
+            }
+            li{
+                margin:20px;
+                border:1 solid gery;
+                padding:10px 0 10px;
+                margin:0px;
+            }
+
+            .p1{
+                float:right;
+                color:grey;
+            }
+            .p2{
+                float:left;
+                color:grey;
+            }
+            .x{
+                display: none;
+            }
+            li:hover .x{
+                display: block;
+                float:right;
+                color:grey;
+                margin-right: 20px;
+                opacity: 0.5;
+                user-select: none;   
+             }
+             .themelist{
+                 height:100px;
+                 width:500px;
+             }
+        </style>
+    </head>
+    <body>
+    <div id="app">
+        <button @click="open1">刷新</button>
+        <div id="themelist" v-for="(item,index) in themelist">
+            <div>主题ID:{{item.themeid}} 标题:{{item.themename}} 楼主:{{item.louzhuID}} 楼层数:{{item.loucengshu}} 
+                <button @click="gettheme(item.themeid)":id="item.themeid">查看</button>
+                
+                <div v-for="(item1,index1) in item.reply" >
+                    <div v-for="item2 in item1" style="border: 1px solid rgb(83, 94, 250) ;width:100vw;height:200px">
+                        用户ID:{{item2.id_louceng}} 内容:{{item2.reply}} 楼层;{{item2.id_louceng}}
+                        <div v-if="item2.reply_in!=''" style="margin-left:10px;border: 1px solid rgb(36, 36, 41) ;width:50vw;height:100px">
+                        <p  v-for="item3 in item2.reply_in">
+                            用户ID:{{item3.reply_username_id}} 内容:{{item3.reply}}
+                        </p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data:{
+                themelist:[]
+            },
+            mounted(){
+                this.open();
+            },
+            methods:{
+                
+                open:function(){
+                    var _this=this;
+                    axios.post('http://127.0.0.1:8088/api/themelist', {
+                        
+                    })
+                    .then(function (response) {
+                        _this.themelist=response.data;
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                                
+                    },
+                open1:function(){
+                    console.log(_this.themelist);
+                },
+                gettheme(id){
+                            var _this=this;
+                            var themeid=id;
+                            axios.post('http://127.0.0.1:8088/api/gettheme', {
+                            "themeid":themeid
+                        })
+                        .then(function (response) {
+                            console.log(response.data);
+                            
+                            var j=_this.themelist.length;
+                            for(var i=0;i<j;i++){
+                                if(_this.themelist[i].themeid==themeid)
+                                {
+                                    _this.themelist[i].reply=response.data;
+                                }
+                                
+                            }
+                        })
+                .catch(function (error) {
+                });
+                console.log(this.themelist);
+                }
+            
+            }
+        })
+    </script>
+</html>
