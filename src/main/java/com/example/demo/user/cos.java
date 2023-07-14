@@ -34,9 +34,9 @@ public class cos {
         try {
             //这里的 SecretId 和 SecretKey 代表了用于申请临时密钥的永久身份（主账号、子账号等），子账号需要具有操作存储桶的权限。
             // 替换为您的云 api 密钥 SecretId
-            config.put("secretId", "AKID6eMp4jCOPBsACyoqvA8pGRRBgoiNKCjf");
+            config.put("secretId", "");
             // 替换为您的云 api 密钥 SecretKey
-            config.put("secretKey", "qRlqVaiaGDWsxjwJSLnzwdwzlGVZPhQt");
+            config.put("secretKey", "");
 
             // 设置域名:
             // 如果您使用了腾讯云 cvm，可以设置内部域名
@@ -127,8 +127,8 @@ public class cos {
     static COSClient createCOSClient() {
         // 设置用户身份信息。
         // SECRETID 和 SECRETKEY 请登录访问管理控制台 https://console.cloud.tencent.com/cam/capi 进行查看和管理
-        String secretId = "AKID6eMp4jCOPBsACyoqvA8pGRRBgoiNKCjf";
-        String secretKey = "qRlqVaiaGDWsxjwJSLnzwdwzlGVZPhQt";
+        String secretId = "";
+        String secretKey = "";
         HashMap temp =sign();
         COSCredentials cred = new BasicSessionCredentials(temp.get("tmpSecretId").toString(), temp.get("tmpSecretKey").toString(),temp.get("sessionToken").toString());
 
